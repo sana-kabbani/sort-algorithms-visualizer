@@ -7,8 +7,7 @@ from matplotlib.backends.backend_qt5agg import \
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtWidgets import *
 from PyQt5.uic import loadUi
-
-
+from PyQt5.QtCore import QTimer
 
 class MatplotlibWidget(QMainWindow):
 
@@ -18,6 +17,7 @@ class MatplotlibWidget(QMainWindow):
     loop_state = False
     algor = None
     plot_type= None
+    switch_no = 0
 
     def __init__(self):
         
@@ -26,68 +26,96 @@ class MatplotlibWidget(QMainWindow):
 
         # Read UI
         loadUi("sort_project.ui",self)
-        
-        self.setWindowIcon(QtGui.QIcon("icon.png"))
+        self.low = None
+        self.high = None
+        self.pivot_index = None
+     
         self.initial_graph()
         self.MplWidget.canvas.axes.get_xaxis().set_visible(False)
         self.MplWidget.canvas.axes.get_yaxis().set_visible(False)
+
+        self.custom.toggled.connect(self.custome)
+        self.random.toggled.connect(self.Random)
+
 
         # Connect methods to Radio buttons  :
         self.Bubble.toggled.connect(lambda: self.algorithm("bubble"))
         self.Insertion.toggled.connect(lambda : self.algorithm("insertion"))
         self.Merge.toggled.connect(lambda: self.algorithm("merge"))
         self.Selection.toggled.connect(lambda : self.algorithm("selection"))
-        #self.Quick.toggled.connect(self.select_sort)
-        #self.Scatter.toggled.connect(self.select_sort)
-        #self.Bar.toggled.connect(self.select_sort)
-        #self.Stem.toggled.connect(self.select_sort)
-        
+        self.Quick.toggled.connect(lambda : self.algorithm("quick"))
+         
         self.Scatter.toggled.connect(lambda : self.plot("scatter"))
         self.Bar.toggled.connect(lambda : self.plot("bar"))
         self.Stem.toggled.connect(lambda : self.plot("stem"))
+        self.sayi.setText(str(self.switch_no))
         
-
-
-
 
         # Update Graph when spin-box is changed
         self.spnBars.valueChanged.connect(self.update_new_graph)
+        self.list.text
+        
 
-        # Call scramble method when clicked
-        self.reset_button.clicked.connect(self.scramble_bars)
+        self.reset_button.clicked.connect(self.reset)
         self.start_button.clicked.connect(lambda: self.start(self.algor))
-        #self.pause_button.clicked.connect(self.scramble_bars)
-        #self.reset_button.clicked.connect(self.scramble_bars)
-                
-
-    
-    
-    def new_frame(self, highlight_bar):
+        self.stop_button.clicked.connect(self.stop_sort)
+    def custome(self):
+        self.groupBox.setEnabled(False)
+        self.groupBox_2.setEnabled(True)
+    def Random(self):
+        self.groupBox.setEnabled(True)
+        self.groupBox_2.setEnabled(False)
+        
+           
+#frames            
+    def new_frame2(self, index):
+        
          
-        # Sleep to create a more pleasing animation
         time.sleep(self.ani_time())
         self.MplWidget.canvas.axes.clear()
 
-        # Create colour list to indicate which bar is highlighted
+        # renk liste oluşturmak
         bar_color = ["#00A7E1"] * (len(self.ydata)-1)
-        bar_color.insert(highlight_bar,"#ffa500")
+        bar_color.insert(index,"ffa500")
+        
         self.draw_graph(self.xdata, self.ydata, bar_color)
-
-        # Process pending envents for the MPL graph
         QtCore.QCoreApplication.processEvents()
+        
+    def new_frame_switch(self, highlight_bar,ikinci ):
+     
+        time.sleep(self.ani_time())
+        self.MplWidget.canvas.axes.clear()
 
+        # renk liste oluşturmak
+        bar_color = ["#00A7E1"] * (len(self.ydata)-2)
+        bar_color.insert(highlight_bar,"#ffa500")
+        bar_color.insert(ikinci,"#ffa500")
+       
+        self.draw_graph(self.xdata, self.ydata, bar_color)
+        QtCore.QCoreApplication.processEvents()
+    def new_frame(self, i):
+        time.sleep(self.ani_time())
+        self.MplWidget.canvas.axes.clear()
+
+        bar_color = ["#00A7E1"] * (len(self.ydata)-1)
+        for i in  range(i) :
+           bar_color.insert(i ,"red")
+
+        self.draw_graph(self.xdata, self.ydata, bar_color)
+        QtCore.QCoreApplication.processEvents()
+    
 
     def ani_time(self):
-        # Determine sort wait time scaled to bars amount
+        # Sütun miktarına ölçeklenmiş sıralama bekleme süresini belirleme
+        
         ani_speed = self.speed_slider.value()
 
-        # Linear formula that determine the sleep time from the slider value
-        ani_interval = (-1/295)*ani_speed + 0.336
+        #Kaydırıcı değerinden uyku süresini belirleyen doğrusal formül
+        ani_interval = (-1/295)*ani_speed + 1
         return(ani_interval)
-    
-    
-    def scramble_bars(self):
-        # Scramble bars in canvas
+        
+    def reset(self):
+        
         self.MplWidget.canvas.axes.clear()
 
         bar_count = self.spnBars.value()
@@ -99,38 +127,35 @@ class MatplotlibWidget(QMainWindow):
             target = random.randint(j, len(scram_ys)-1)
             scram_ys[j] , scram_ys[target] = scram_ys[target], scram_ys[j]
         
-        # Send scrambled data to class var
+       
         self.ydata = scram_ys.copy()
         self.xdata = xs.copy()
 
-        # Draw new data onto graph
+        
         self.draw_graph(xs, scram_ys, None)
-
 
     def update_new_graph(self):
         # Update canvas on change event from the spin edit
         self.MplWidget.canvas.axes.clear()
 
-        # Create new dataset with changed size
+        # Değiştirilen boyutta yeni veri kümesi oluştur
         bar_count = self.spnBars.value()
         ys = [i for i in range(1, bar_count +1)]
         xs = ys.copy()
 
-        # Send data to class var
+        # mevcut olan  sınıfının değişkenlere  veri gönder
         self.ydata = ys.copy()
         self.xdata = xs.copy()
 
-        # Draw new data onto graph
+        # Grafiğe yeni veriler çizin
         self.draw_graph(xs, ys, None)
         
-
     def initial_graph(self):
-        # Startup with bars, not empty graph
+     
         self.update_new_graph()
 
-
     def draw_graph(self, xs, ys, bar_color):
-        # Draw graph from x-list and y-list
+        # x-listesinden ve y-listesinden grafik çizin
         if bar_color is None:
             if self.plot_type == "scatter":
                 self.MplWidget.canvas.axes.scatter(xs, ys, color = "#00A7E1")
@@ -149,7 +174,7 @@ class MatplotlibWidget(QMainWindow):
                 self.MplWidget.canvas.axes.bar(xs, ys, color = "#00A7E1")
                                 
         else:
-            # Color parameter will highlight selected bar (Bar that is being moved)
+            # Renk parametresi seçilen  vurgulayacaktır (switch)
             if self.plot_type == "scatter":
                   self.MplWidget.canvas.axes.scatter(xs, ys, color = bar_color)
             elif self.plot_type == "stem":
@@ -168,130 +193,120 @@ class MatplotlibWidget(QMainWindow):
                 self.MplWidget.canvas.axes.bar(xs, ys, color = bar_color)
         self.MplWidget.canvas.draw()      
 
-
     def buttons(self, tfstate):
         self.Bubble.setEnabled(tfstate)
         self.Insertion.setEnabled(tfstate)
         self.Merge.setEnabled(tfstate)
         self.Selection.setEnabled(tfstate)
-        #self.Quick.setEnabled(tfstate)
-        #self.Bar.setEnabled(tfstate)
-        #self.Stem.setEnabled(tfstate)
-       # self.Scatter.setEnabled(tfstate)
+        self.Quick.setEnabled(tfstate)
+        self.Bar.setEnabled(tfstate)
+        self.Stem.setEnabled(tfstate)
+        self.Scatter.setEnabled(tfstate)
         self.create_button.setEnabled(tfstate)
         self.start_button.setEnabled(tfstate)
-       # self.pause_button.setEnabled(tfstate)
         self.reset_button.setEnabled(tfstate)
       
-     
+ #algorithms    
     def  bubble_sort(self):
-        # Copy dataset
+        # veri kopyala
         yarray = self.ydata.copy()
 
-        # Disable buttons
+        # Düğmeleri devre dışı bırak
         self.buttons(False)
 
-        # Loop through all elements
+        # Tüm öğeler arasında döngü
         for i in range(len(yarray)):
 
-            # Determine new endpoint as last i elements will be sorted (efficientcy)
+            # Son i öğeleri sıralanacağı için yeni bitiş noktası belirleyin 
             endp = len(yarray) - i
             
-            # Iterate over new resized dataset
+            
             for j in range(0 , endp):
+                if not self.loop_state:
+                   break
                 
-                # Prevent loop reaching out of list
+                # Döngünün liste dışına çıkmasını engelle
                 if j+1 == len(yarray):
                     pass
                 else:
                     if yarray[j] > yarray[j+1]:
+                        self.new_frame_switch(j,j+1)
 
-                        # Swap elements if not ascending 
                         yarray[j], yarray[j+1] = yarray[j+1], yarray[j]
-
-                        # Update class var
-                        self.ydata = yarray
-
-                        # Call to update graph
-                        self.new_frame(j+1)
+                        self.switch_no = self.switch_no + 1
+                        self.sayi.setText(str(self.switch_no))
+                          
+                        self.ydata = yarray    
+                        self.new_frame_switch(j,j+1)
+                        
+            
+       
+            if not self.loop_state:
+                   break
 
         self.buttons(True)
-
-
+   
     def insert_sort(self):
-        # Get class variable
         yarray = self.ydata.copy()
 
-        # Disable buttons
+        
         self.buttons(False)
 
-        # Loop through list
+   
         for i in range(len(yarray)):
+            if not self.loop_state:
+                break
 
             if (i+1) == len(yarray):
-                # Prevent reading out of list
+               
                 break 
             else:
-                # If pair not in ascending order
+                
                 if yarray[i] > yarray[i+1]:
-                    # Using Swaping method for better animation / demostration. Delete and insert method is commented
-
-                    # # Delete and Insert method---------------------------------------------
-                    # # Read and remove
-                    # temp = yarra.pop(i+1) 
-
-                    # for j in range(i+1):
-                    #     if yarray[j] > temp:
-                    # 
-                    #         # Find first elem that is bigger than Temp, insert at that position, shift the rest down
-                    #         index = j
-                    #         yarray.insert(index, temp)
-                    #         self.new_frame(j)
-                    #         break               
-                    
-                    # Swap method -----------------------------------------------------------
-                    # Find the right place for the elem, from beginning till current spot in list
+                   
                     for k in reversed(range(i+1)):
+                        if not self.loop_state:
+                            break
                         if yarray[k+1] < yarray[k]:
+                            self.new_frame_switch(k,k+1)
                             yarray[k], yarray[k+1] = yarray[k+1] , yarray[k]
 
-                            # Update class var
+                          
                             self.ydata = yarray
+                           
 
-                            # Update graph
-                            self.new_frame(k)
+                           
+                            
+                            
+                            self.new_frame_switch(k,k+1)
                         else:
                             break
 
         self.buttons(True)
          
-
     def merge_sort(self):
-        # Copy dataset
         yarray = self.ydata.copy()
-
-        # Disable buttons
         self.buttons(False)
 
         yarray = self.merge_split(yarray)
 
-        # Update class var
         self.ydata = yarray
         self.new_frame(0)
         
         self.buttons(True)
 
-
     def merge_split(self, arr):
         length = len(arr)
+        if not self.loop_state:
+           return arr
 
-        # Return, end of recursion
+ 
         if length == 1:
             return(arr)
         
         midp = length//2
 
-        # Call self to split until return single element, update class var
+        # Tek bir öğe dönene kadar bölmek için kendini çağır, sınıf değişkenini güncelle
         arr_1 = self.merge_split(arr[:midp])
         self.merge_update(arr_1, self.ydata)
         arr_2 = self.merge_split(arr[midp:])
@@ -299,9 +314,8 @@ class MatplotlibWidget(QMainWindow):
         
         self.new_frame(0)
 
-        # Call merge to sort half lists
+      # Yarım listeleri sıralamak için çağrı birleştirme
         return(self.merge(arr_1, arr_2))
-
 
     def merge_update(self, sub_list, main_list):
         
@@ -321,9 +335,9 @@ class MatplotlibWidget(QMainWindow):
         # Insert same elements back to main list, from sorted list (in order)
         for i in range(low, high+1):
             main_list.insert(i, sub_list[i-low])
-
         
     def merge(self, arr_1, arr_2):
+         
         sorted_arr = []
 
         # Use append and pop, given already sorted lists 
@@ -344,47 +358,98 @@ class MatplotlibWidget(QMainWindow):
             sorted_arr.append(arr_2.pop(0))
 
         return(sorted_arr)
-        
-    
+            
     def select_sort(self):
-        # Get class variable
+    
         yarray = self.ydata.copy()
 
-        # Disable buttons
+
         self.buttons(False)
+        l=0
 
         # Loop through list
         for i in range(len(yarray)):
+            if not self.loop_state:
+                break
 
-            #Place holder for smallest number in sublist
-            holder = None
-
-            # Iterate over unsorted sublist
-            for j in range(i,len(yarray)):
-                
-                if (not holder):
-                    holder = yarray[j]
-                elif yarray[j] < holder:
-                    holder = yarray[j]
-
-                # Show iteration
-                self.new_frame(j)
+            # Alt listedeki en küçük sayı için min'i yerleştirin
+            min = 0
             
+# Sıralanmamış alt listeyi yineleyin
+            for j in range(i,len(yarray)):
+                if not self.loop_state:
+                    break
+                
+                
+                if ( min == 0 ):
+                    min = yarray[j]
+                elif yarray[j] < min:
+                    min = yarray[j]
+                    l = j
 
-            # Read and insert lowest bar into sorted part
-            shifter_index = yarray.index(holder)
+                
+                self.new_frame_switch(l , j)
+            
+           # En alttaki çubuğu okuyun ve sıralanan kısma ekleyin
+            shifter_index = yarray.index(min)
             yarray.pop(shifter_index)
-            yarray.insert(i, holder)
+            yarray.insert(i, min)
 
-            # Update class var & graph
             self.ydata = yarray
 
-            # Update graph
-            self.new_frame(shifter_index)
+            self.new_frame(i+1)
 
         self.buttons(True)
- 
+    
+    def quick_sort(self):
+
+       yarray = self.ydata.copy()
+       self.buttons(False)
+       self.quick_sort_recursive(yarray, 0, len(yarray) - 1)
+       self.ydata = yarray
+       self.buttons(True)
+     
+    def quick_sort_recursive(self, arr, low, high):
+        if not self.loop_state:
+               return arr
+        if low < high:
+            
+            # Diziyi bölümlere ayırın ve pivot dizinini alın
+            pivot_index = self.partition(arr, low, high)
+            self.low = low
+            self.high = high
+            self.pivot_index = pivot_index
+        
+            # Sol ve sağ alt dizilerde yinelemeli olarak hızlı sıralama çağırın
+            self.quick_sort_recursive(arr, low, pivot_index - 1)
+            self.quick_sort_recursive(arr, pivot_index + 1, high)       
+    
+    def partition(self, arr, low, high):
+    # Pivot olarak en sağdaki elemanı seçin
+       pivot = arr[high]
+       i = low - 1
+       self.new_frame2(high)
+
+       for j in range(low, high):
+           if arr[j] <= pivot:  
+            # Öğeleri değiştir
+               i += 1
+               self.new_frame_switch(i,j)
+               arr[i], arr[j] = arr[j], arr[i]
+
+
+               self.ydata = arr
+               self.new_frame_switch(i,j)
+
+# Pivotu son konumuna getirin
+       arr[i + 1], arr[high] = arr[high], arr[i + 1]
+       self.new_frame2(i+1)
+
+       self.ydata = arr
+       return i + 1
+                          
     def start(self , value):
+        self.loop_state = True
         if(value == "bubble"):
             self.bubble_sort()
         if(value == "insertion"):
@@ -393,15 +458,19 @@ class MatplotlibWidget(QMainWindow):
             self.select_sort()
         if(value == "merge"):
             self.merge_sort()
+        if(value == "quick"):
+            self.quick_sort()
     def algorithm(self , value):
         if value =="bubble":
             self.algor = "bubble"
-        if value =="insertion'":
+        if value =="insertion":
             self.algor = "insertion"
         if value =="merge":
             self.algor = "merge"
         if value =="selection":
             self.algor = "selection"
+        if value == "quick":
+           self.algor = "quick"
    
     def plot(self , value):
         if value =="scatter":
@@ -410,7 +479,12 @@ class MatplotlibWidget(QMainWindow):
             self.plot_type = "bar"
         if value =="stem":
             self.plot_type = "stem"
-    
+
+    def stop_sort(self):
+    #Sıralama işlemini durdurmak için döngü durumunu Yanlış olarak ayarlayın
+       self.loop_state = False
+
+#çalıştırma  
 app = QApplication([])
 window = MatplotlibWidget()
 window.show()

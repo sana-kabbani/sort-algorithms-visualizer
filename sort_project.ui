@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1125</width>
-    <height>859</height>
+    <width>1101</width>
+    <height>554</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -123,7 +123,7 @@
      <string>Start</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pause_button">
+   <widget class="QPushButton" name="stop_button">
     <property name="geometry">
      <rect>
       <x>150</x>
@@ -133,7 +133,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Pause</string>
+     <string>Stop</string>
     </property>
    </widget>
    <widget class="QPushButton" name="reset_button">
@@ -155,10 +155,10 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>360</x>
+      <x>380</x>
       <y>130</y>
       <width>671</width>
-      <height>391</height>
+      <height>371</height>
      </rect>
     </property>
    </widget>
@@ -290,13 +290,75 @@
      <enum>Qt::Horizontal</enum>
     </property>
    </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>30</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string> karıştırma Sayısı</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="sayi">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>30</y>
+      <width>111</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>810</x>
+      <y>70</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Big(O):</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="bigo">
+    <property name="geometry">
+     <rect>
+      <x>950</x>
+      <y>70</y>
+      <width>63</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1125</width>
+     <width>1101</width>
      <height>26</height>
     </rect>
    </property>

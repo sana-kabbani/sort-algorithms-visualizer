@@ -9,12 +9,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1101</width>
-    <height>554</height>
+    <width>1068</width>
+    <height>561</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background: rgb(255, 255, 255)</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="create_button">
@@ -25,6 +28,20 @@
       <width>111</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius: 20px;
+background:rgb(170, 170, 255);
+border-width:2px;
+border-radius:10px;
+border-color:black;
+}
+QPushButton:hover{
+  background:rgb(206, 213, 255);
+  border-radius: 10px;
+
+}</string>
     </property>
     <property name="text">
      <string>Create</string>
@@ -119,6 +136,20 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius: 20px;
+background:rgb(170, 170, 255);
+border-width:2px;
+border-radius:10px;
+border-color:black;
+}
+QPushButton:hover{
+  background:rgb(206, 213, 255);
+  border-radius: 10px;
+
+}</string>
+    </property>
     <property name="text">
      <string>Start</string>
     </property>
@@ -132,6 +163,20 @@
       <height>31</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius: 20px;
+background:rgb(170, 170, 255);
+border-width:2px;
+border-radius:10px;
+border-color:black;
+}
+QPushButton:hover{
+  background:rgb(206, 213, 255);
+  border-radius: 10px;
+
+}</string>
+    </property>
     <property name="text">
      <string>Stop</string>
     </property>
@@ -144,6 +189,20 @@
       <width>101</width>
       <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+border-radius: 20px;
+background:rgb(170, 170, 255);
+border-width:2px;
+border-radius:10px;
+border-color:black;
+}
+QPushButton:hover{
+  background:rgb(206, 213, 255);
+  border-radius: 10px;
+
+}</string>
     </property>
     <property name="text">
      <string>Reset</string>
@@ -160,6 +219,10 @@
       <width>671</width>
       <height>371</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(135, 206, 235)
+</string>
     </property>
    </widget>
    <widget class="QGroupBox" name="groupBox">
@@ -314,8 +377,11 @@
       <x>950</x>
       <y>30</y>
       <width>111</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>TextLabel</string>
@@ -342,11 +408,14 @@
    <widget class="QLabel" name="bigo">
     <property name="geometry">
      <rect>
-      <x>950</x>
+      <x>910</x>
       <y>70</y>
-      <width>63</width>
-      <height>20</height>
+      <width>91</width>
+      <height>21</height>
      </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
     </property>
     <property name="text">
      <string>TextLabel</string>
@@ -358,7 +427,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1101</width>
+     <width>1068</width>
      <height>26</height>
     </rect>
    </property>

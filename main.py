@@ -26,6 +26,7 @@ class MatplotlibWidget(QMainWindow):
 
         # Read UI
         loadUi("sort_project.ui",self)
+        self.setWindowIcon(QtGui.QIcon("icon.png"))
         self.low = None
         self.high = None
         self.pivot_index = None
@@ -36,6 +37,7 @@ class MatplotlibWidget(QMainWindow):
 
         self.custom.toggled.connect(self.custome)
         self.random.toggled.connect(self.Random)
+        
 
 
         # Connect methods to Radio buttons  :
@@ -53,7 +55,7 @@ class MatplotlibWidget(QMainWindow):
 
         # Update Graph when spin-box is changed
         self.spnBars.valueChanged.connect(self.update_new_graph)
-        self.list.text
+        self.create_button.clicked.connect(self.create)
         
 
         self.reset_button.clicked.connect(self.reset)
@@ -65,6 +67,24 @@ class MatplotlibWidget(QMainWindow):
     def Random(self):
         self.groupBox.setEnabled(True)
         self.groupBox_2.setEnabled(False)
+        
+    def create(self):
+        
+        text = self.list.text()
+        
+        self.numbers_list = text.split()
+        
+        try:
+            self.numbers_list = [int(number) for number in self.numbers_list]
+            self.old_list = self.numbers_list
+            self.update_new_graph()
+        except: 
+           print("An exception occurred")
+        
+        
+        
+        
+        
         
            
 #frames            
@@ -117,16 +137,23 @@ class MatplotlibWidget(QMainWindow):
     def reset(self):
         
         self.MplWidget.canvas.axes.clear()
-
-        bar_count = self.spnBars.value()
+        if self.groupBox.isEnabled():
+            bar_count = self.spnBars.value()
+            scram_ys = [i for i in range(1, bar_count +1)]
+            xs = scram_ys.copy()
+            
+            
         
-        scram_ys = [i for i in range(1, bar_count +1)]
-        xs = scram_ys.copy()
+            for j in range(0, len(scram_ys)-1):
+                target = random.randint(j, len(scram_ys)-1)
+                scram_ys[j] , scram_ys[target] = scram_ys[target], scram_ys[j]
         
-        for j in range(0, len(scram_ys)-1):
-            target = random.randint(j, len(scram_ys)-1)
-            scram_ys[j] , scram_ys[target] = scram_ys[target], scram_ys[j]
+        elif self.groupBox_2.isEnabled():
+            value = self.numbers_list
+            scram_ys = self.old_list 
+            xs =  [i for i in range(1, len(self.old_list) +1)]
         
+       
        
         self.ydata = scram_ys.copy()
         self.xdata = xs.copy()
@@ -137,11 +164,22 @@ class MatplotlibWidget(QMainWindow):
     def update_new_graph(self):
         # Update canvas on change event from the spin edit
         self.MplWidget.canvas.axes.clear()
-
         # Değiştirilen boyutta yeni veri kümesi oluştur
-        bar_count = self.spnBars.value()
-        ys = [i for i in range(1, bar_count +1)]
-        xs = ys.copy()
+        if self.groupBox.isEnabled():
+            bar_count = self.spnBars.value()
+            ys = [i for i in range(1, bar_count +1)]
+            xs = ys.copy()
+        elif self.groupBox_2.isEnabled():
+            value = self.numbers_list
+            ys = self.numbers_list 
+            xs =  [i for i in range(1, len(self.numbers_list) +1)]
+            
+        
+            
+
+        
+        
+        
 
         # mevcut olan  sınıfının değişkenlere  veri gönder
         self.ydata = ys.copy()
@@ -219,6 +257,7 @@ class MatplotlibWidget(QMainWindow):
 
             # Son i öğeleri sıralanacağı için yeni bitiş noktası belirleyin 
             endp = len(yarray) - i
+            self.bigo.setText("θ(n^2)")
             
             
             for j in range(0 , endp):
@@ -248,6 +287,7 @@ class MatplotlibWidget(QMainWindow):
    
     def insert_sort(self):
         yarray = self.ydata.copy()
+        self.bigo.setText("θ(n^2)")
 
         
         self.buttons(False)
@@ -287,6 +327,7 @@ class MatplotlibWidget(QMainWindow):
     def merge_sort(self):
         yarray = self.ydata.copy()
         self.buttons(False)
+        self.bigo.setText("θ(nlog(n))")
 
         yarray = self.merge_split(yarray)
 
@@ -360,6 +401,8 @@ class MatplotlibWidget(QMainWindow):
         return(sorted_arr)
             
     def select_sort(self):
+        self.bigo.setText("θ(n^2)")
+        
     
         yarray = self.ydata.copy()
 
@@ -402,6 +445,7 @@ class MatplotlibWidget(QMainWindow):
         self.buttons(True)
     
     def quick_sort(self):
+       self.bigo.setText("θ(nlog(n))")
 
        yarray = self.ydata.copy()
        self.buttons(False)

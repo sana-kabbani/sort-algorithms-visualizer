@@ -368,7 +368,7 @@ QPushButton:hover{
      </font>
     </property>
     <property name="text">
-     <string> karıştırma Sayısı</string>
+     <string>Switch-Number:</string>
     </property>
    </widget>
    <widget class="QLabel" name="sayi">

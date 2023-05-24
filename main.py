@@ -88,7 +88,7 @@ class MatplotlibWidget(QMainWindow):
         
            
 #frames            
-    def new_frame2(self, index):
+    def pivot_frame(self, index):
         
          
         time.sleep(self.ani_time())
@@ -96,7 +96,7 @@ class MatplotlibWidget(QMainWindow):
 
         # renk liste oluşturmak
         bar_color = ["#00A7E1"] * (len(self.ydata)-1)
-        bar_color.insert(index,"ffa500")
+        bar_color.insert(index,"yellow")
         
         self.draw_graph(self.xdata, self.ydata, bar_color)
         QtCore.QCoreApplication.processEvents()
@@ -113,13 +113,24 @@ class MatplotlibWidget(QMainWindow):
        
         self.draw_graph(self.xdata, self.ydata, bar_color)
         QtCore.QCoreApplication.processEvents()
-    def new_frame(self, i):
+    def new_frame_listelenmis(self, i):
         time.sleep(self.ani_time())
         self.MplWidget.canvas.axes.clear()
-
         bar_color = ["#00A7E1"] * (len(self.ydata)-1)
-        for i in  range(i) :
-           bar_color.insert(i ,"red")
+        if self.algor == "bubble":
+            
+            for i in  range(len(self.ydata) ,  i) :
+                bar_color.insert( i,"red")
+                            
+
+             
+        else:
+            for i in  range(i) :
+               bar_color.insert(i ,"red") 
+            
+
+        
+       
 
         self.draw_graph(self.xdata, self.ydata, bar_color)
         QtCore.QCoreApplication.processEvents()
@@ -278,7 +289,6 @@ class MatplotlibWidget(QMainWindow):
                         self.ydata = yarray    
                         self.new_frame_switch(j,j+1)
                         
-            
        
             if not self.loop_state:
                    break
@@ -313,6 +323,8 @@ class MatplotlibWidget(QMainWindow):
 
                           
                             self.ydata = yarray
+                            self.switch_no = self.switch_no + 1
+                            self.sayi.setText(str(self.switch_no))
                            
 
                            
@@ -332,7 +344,7 @@ class MatplotlibWidget(QMainWindow):
         yarray = self.merge_split(yarray)
 
         self.ydata = yarray
-        self.new_frame(0)
+      #  self.pivot_frame(0)
         
         self.buttons(True)
 
@@ -353,7 +365,7 @@ class MatplotlibWidget(QMainWindow):
         arr_2 = self.merge_split(arr[midp:])
         self.merge_update(arr_2, self.ydata)
         
-        self.new_frame(0)
+        #self.pivot_frame(0)
 
       # Yarım listeleri sıralamak için çağrı birleştirme
         return(self.merge(arr_1, arr_2))
@@ -397,6 +409,7 @@ class MatplotlibWidget(QMainWindow):
 
         while arr_2:
             sorted_arr.append(arr_2.pop(0))
+            
 
         return(sorted_arr)
             
@@ -429,6 +442,7 @@ class MatplotlibWidget(QMainWindow):
                 elif yarray[j] < min:
                     min = yarray[j]
                     l = j
+                    
 
                 
                 self.new_frame_switch(l , j)
@@ -439,8 +453,10 @@ class MatplotlibWidget(QMainWindow):
             yarray.insert(i, min)
 
             self.ydata = yarray
+            self.switch_no = self.switch_no + 1
+            self.sayi.setText(str(self.switch_no))
 
-            self.new_frame(i+1)
+            self.new_frame_listelenmis(i+1)
 
         self.buttons(True)
     
@@ -472,27 +488,31 @@ class MatplotlibWidget(QMainWindow):
     # Pivot olarak en sağdaki elemanı seçin
        pivot = arr[high]
        i = low - 1
-       self.new_frame2(high)
+       self.pivot_frame(high)
 
        for j in range(low, high):
            if arr[j] <= pivot:  
             # Öğeleri değiştir
                i += 1
                self.new_frame_switch(i,j)
+               self.switch_no = self.switch_no + 1
+               self.sayi.setText(str(self.switch_no))
                arr[i], arr[j] = arr[j], arr[i]
 
 
                self.ydata = arr
+              
                self.new_frame_switch(i,j)
 
 # Pivotu son konumuna getirin
        arr[i + 1], arr[high] = arr[high], arr[i + 1]
-       self.new_frame2(i+1)
+       self.pivot_frame(i+1)
 
        self.ydata = arr
        return i + 1
                           
     def start(self , value):
+        self.switch_no = 0
         self.loop_state = True
         if(value == "bubble"):
             self.bubble_sort()

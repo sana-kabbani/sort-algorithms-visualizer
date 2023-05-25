@@ -2,7 +2,10 @@
 
 This project provides a user interface for visualizing different sorting algorithms. Users can observe various sorting algorithms in real-time and gain a better understanding of how the algorithms work.
 
-##Requirement
+User can enter his desired list of number or can just let the app make random data .
+
+
+## Requirement
 1-Python 3.9 or higher
 
 2-PyQt6 library 
@@ -10,6 +13,12 @@ This project provides a user interface for visualizing different sorting algorit
 3-Numpy library
 
 4-Matplotlip Library
+
+## Used Algorithms 
+Insertion Sort ,Selection Sort ,Quick Sort ,Merge Sort ,Bubble Sort 
+
+## Used Plot Types 
+Stem Plot,Scatter Plot , Bar Plot 
 
 ## Installation
 To install and run this project, follow these steps:

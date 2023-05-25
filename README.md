@@ -29,7 +29,19 @@ To install and run this project, follow these steps:
 
 3-Run the main application file to launch the sorting algorithm visualization interface.
 
-## Example IU
+
+
+### Example of visualization the random data with Scatter Plot while running the Selection sort method 
+
+![Screenshot (176)](https://github.com/sana-kabbani/sort-algorithms-visualizer/assets/57013014/a661f2e9-9230-4635-a69f-0b95f8b65de1)
+
+
+
+
+### Example of visualization the custom data with Bar Plot while running the  Bubble sort method 
  
- ![Screenshot (176)](https://github.com/sana-kabbani/sort-algorithms-visualizer/assets/57013014/2f4b529d-56c9-4377-8ec8-c49c96541ca0)
+![Screenshot (179)](https://github.com/sana-kabbani/sort-algorithms-visualizer/assets/57013014/56e59060-8e7a-4a07-b495-30bc05e73227)
+
+
+
 

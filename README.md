@@ -22,3 +22,5 @@ To install and run this project, follow these steps:
 
 ## Example IU
  
+ ![Screenshot (176)](https://github.com/sana-kabbani/sort-algorithms-visualizer/assets/57013014/2f4b529d-56c9-4377-8ec8-c49c96541ca0)
+

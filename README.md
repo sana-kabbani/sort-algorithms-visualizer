@@ -8,7 +8,7 @@ User can enter his desired list of number or can just let the app make random da
 ## Requirement
 1-Python 3.9 or higher
 
-2-PyQt6 library 
+2-PyQt5 library 
 
 3-Numpy library
 

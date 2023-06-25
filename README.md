@@ -42,6 +42,10 @@ To install and run this project, follow these steps:
  
 ![Screenshot (179)](https://github.com/sana-kabbani/sort-algorithms-visualizer/assets/57013014/56e59060-8e7a-4a07-b495-30bc05e73227)
 
-
+### to do 
+ 1- colors 
+ 2- fix bugs 
+ 3- files
+ 4-.exe 
 
 
